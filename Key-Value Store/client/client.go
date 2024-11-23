@@ -12,10 +12,18 @@ func main(){
 		fmt.Println("Error", err)
 	}
 
+	defer conn.Close()
 
 	conn.Write([]byte("POST name Ahmed\n"))
-	//Implement user input for client
+	buffer := make([]byte, 1024)
+	for {
+		n,err := conn.Read(buffer)
+		if err != nil{
+			fmt.Println("Error", err)
+		}
+		fmt.Println(string(buffer[:n]))
+		break
+	}
 
-	defer conn.Close()
 
 }

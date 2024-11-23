@@ -1,9 +1,18 @@
 package main
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
+	"io"
 	"net"
 	"strings"
+	"sync"
+)
+
+var (
+	store = make(map[string]string)
+	mu 		sync.Mutex
 )
 
 func main() {
@@ -33,26 +42,55 @@ func handleClient(c net.Conn) {
 
 		n,err := c.Read(buffer)
 		if err != nil{
-			fmt.Println("Error", err)
-			break
+			if err != io.EOF {
+				fmt.Println("Error", err)
+				break
+			}
 		}
 		message := string(buffer[:n])
 		if strings.Contains(message, "\n"){
-			fmt.Println(message)
 			//Handle HTTP methods
 			parsed := strings.Split(message, " ")
 			command := parsed[0]
+			key := parsed[1]
+			value := parsed[2]
 			switch (command) {
 			case "POST":
-				fmt.Println("You have mae a POST request")
+				status := writeToStore(key, value)
+				c.Write([]byte(status))
 			case "DELETE":
 				fmt.Println("You have made a DELETE request")
 			case "UPDATE":
-				fmt.Println("You have made a UPDATE request")
+				status,err := updateStore(key,value)
+				if err != nil {
+					fmt.Println("Error", err)
+					c.Write([]byte(status))
+				}
+				c.Write([]byte(status))
 			default:
 				break
 			}
 		}
 
 	}
+}
+
+func writeToStore(key string, value string) string {
+	mu.Lock()
+	store[key] = value
+	mu.Unlock()
+	return "2xx"
+
+}
+
+func updateStore(key string, value string) (string, error) {
+	mu.Lock()
+	_, exist := store[key]
+	if exist {
+		store[key] = value
+		mu.Unlock()
+		return "2xx", nil
+	}
+	mu.Unlock()
+	return "5xx", errors.New("Key doesn't exist")
 }
