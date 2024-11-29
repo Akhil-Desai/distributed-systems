@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -59,7 +58,11 @@ func handleClient(c net.Conn) {
 				status := writeToStore(key, value)
 				c.Write([]byte(status))
 			case "DELETE":
-				fmt.Println("You have made a DELETE request")
+				status,err := deleteInStore(key)
+                if err != nil {
+                    c.Write([]byte(status))
+                }
+                c.Write([]byte(status))
 			case "UPDATE":
 				status,err := updateStore(key,value)
 				if err != nil {
@@ -68,6 +71,7 @@ func handleClient(c net.Conn) {
 				}
 				c.Write([]byte(status))
 			default:
+                c.Write([]byte("Invalid command for this store!"))
 				break
 			}
 		}
@@ -85,12 +89,22 @@ func writeToStore(key string, value string) string {
 
 func updateStore(key string, value string) (string, error) {
 	mu.Lock()
+    defer mu.Unlock()
 	_, exist := store[key]
 	if exist {
 		store[key] = value
-		mu.Unlock()
 		return "2xx", nil
 	}
-	mu.Unlock()
-	return "5xx", errors.New("Key doesn't exist")
+	return "4xx", errors.New("Key doesn't exist")
+}
+
+func deleteInStore(key string) (string,error){
+    mu.Lock()
+    defer mu.Unlock()
+    _,exist := store[key]
+    if exist {
+        delete(store,key)
+        return "4xx", nil
+    }
+    return "5xx", errors.New("Key not found")
 }
