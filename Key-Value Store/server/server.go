@@ -71,8 +71,7 @@ func handleClient(c net.Conn) {
 				}
 				c.Write([]byte(status))
 			default:
-                c.Write([]byte("Invalid command for this store!"))
-				break
+                c.Write([]byte("Invalid command for this store!\n\n Correct Format:\n POST or UPDATE or DELETE [key] [value]"))
 			}
 		}
 
@@ -104,7 +103,7 @@ func deleteInStore(key string) (string,error){
     _,exist := store[key]
     if exist {
         delete(store,key)
-        return "4xx", nil
+        return "2xx", nil
     }
     return "5xx", errors.New("Key not found")
 }

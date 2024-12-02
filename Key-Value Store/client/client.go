@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"net"
+	"os"
 )
 
 
@@ -14,15 +16,24 @@ func main(){
 
 	defer conn.Close()
 
-	conn.Write([]byte("POST name Ahmed\n"))
-	buffer := make([]byte, 1024)
-	for {
-		n,err := conn.Read(buffer)
-		if err != nil{
-			fmt.Println("Error", err)
+	go func() {
+		buffer := make([]byte, 1024)
+		for {
+			n,err := conn.Read(buffer)
+			if err != nil{
+				fmt.Println("Error", err)
+				break
+			}
+			fmt.Println(string(buffer[:n]))
 		}
-		fmt.Println(string(buffer[:n]))
-		break
+	} ()
+
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan(){
+		conn.Write([]byte(scanner.Text() + "\n"))
+	}
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error",err)
 	}
 
 
