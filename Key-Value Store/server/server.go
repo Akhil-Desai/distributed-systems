@@ -105,5 +105,5 @@ func deleteInStore(key string) (string,error){
         delete(store,key)
         return "2xx", nil
     }
-    return "5xx", errors.New("Key not found")
+    return "4xx", errors.New("Key not found")
 }
