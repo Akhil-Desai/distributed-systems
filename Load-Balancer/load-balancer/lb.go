@@ -3,13 +3,16 @@ package main
 import (
 	"fmt"
 	"net"
+	"sync"
 )
 
-var servers = [...]string{
-	"localhost:4000",
-	"localhost:4001",
-	"localhost:4002",
-}
+
+var (
+	servers = []string{"localhost:4000", "localhost:4001", "localhost:4002"}
+	index = 0
+	mu sync.Mutex
+)
+
 
 func main(){
 	ln,err := net.Listen("tcp", "localhost:5000")
@@ -21,20 +24,62 @@ func main(){
 	fmt.Println("Listening on port 5000...")
 
 	for {
-		conn,err := ln.Accept()
+		clientConn,err := ln.Accept()
 		if err != nil {
 			fmt.Println("Error", err)
 		}
 
-		go handleRequest(conn)
+		go handleClient(clientConn)
 	}
 
 }
 
-func handleRequest(conn net.Conn){
-	return
-}
+func handleClient(clientConn net.Conn){
 
-func RoundRobin(){
-	return
+	defer clientConn.Close()
+
+	buffer := make([]byte, 1024)
+	for {
+
+		bytes,err := clientConn.Read(buffer)
+		if err != nil{
+			fmt.Println("Error reading from client", err)
+		}
+
+		/*Round Robin */
+		mu.Lock()
+		server := servers[index % len(servers)]
+		index++
+		mu.Unlock()
+
+		/*Dial the Server */
+		serverConn, err := net.Dial("tcp", server)
+		if err != nil{
+			fmt.Println("Error connecting to port:", server)
+			return
+		}
+
+		_,err = serverConn.Write(buffer[:bytes])
+		if err != nil{
+			fmt.Println("Error sending request to port:", server)
+			return
+		}
+
+		responseBuffer := make([]byte, 1024)
+		responseBytes, err := serverConn.Read(responseBuffer)
+		if err != nil {
+			fmt.Println("Error reading response from port:", server)
+			serverConn.Close()
+			return
+		}
+		serverConn.Close()
+
+		_,err = clientConn.Write((responseBuffer[:responseBytes]))
+		if err != nil {
+			fmt.Println("Error sending response to client")
+			return
+		}
+
+	}
+
 }

@@ -25,15 +25,15 @@ func startServers(port string){
 }
 
 func handleClient(conn net.Conn){
-	return
+	
+	defer conn.Close()
 }
 
 func main(){
 	ports := [...]string{"4000","4001","4002"}
 
 	for i := 0; i < len(ports); i++{
-		port := ports[i]
-		go startServers(port)
+		go startServers(ports[i])
 	}
 
 	select{}
