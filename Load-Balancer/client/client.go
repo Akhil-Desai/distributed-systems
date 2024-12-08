@@ -7,10 +7,11 @@ import (
 
 
 func main(){
-	conn, err := net.Dial("tcp","localhost:5000")
+	conn, err := net.Dial("tcp","localhost:5001")
 
 	if err != nil{
 		fmt.Println("Error", err)
+		return
 	}
 
 	defer conn.Close()
@@ -26,5 +27,11 @@ func main(){
 		}
 	}()
 
-	conn.Write([]byte("Beep Bop"))
+	_, err = conn.Write([]byte("Beep Bop"))
+	if err != nil {
+        fmt.Println("Error writing to server:", err)
+        return
+    }
+
+	select{}
 }

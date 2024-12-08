@@ -15,18 +15,20 @@ var (
 
 
 func main(){
-	ln,err := net.Listen("tcp", "localhost:5000")
+	ln,err := net.Listen("tcp", "localhost:5001")
 	if err != nil {
-		fmt.Println("Error Listening on port 5000", err)
+		fmt.Println("Error Listening on port 5001", err)
+        return
 	}
 
 	defer ln.Close()
-	fmt.Println("Listening on port 5000...")
+	fmt.Println("Listening on port 5001...")
 
 	for {
 		clientConn,err := ln.Accept()
 		if err != nil {
 			fmt.Println("Error", err)
+            continue
 		}
 
 		go handleClient(clientConn)
@@ -45,6 +47,8 @@ func handleClient(clientConn net.Conn){
 		if err != nil{
 			fmt.Println("Error reading from client", err)
 		}
+
+        fmt.Println(string(buffer[:bytes]))
 
 		/*Round Robin */
 		mu.Lock()
@@ -79,7 +83,6 @@ func handleClient(clientConn net.Conn){
 			fmt.Println("Error sending response to client")
 			return
 		}
-
 	}
 
 }
