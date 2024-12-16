@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net"
+    "bufio"
+    "os"
 )
 
 
@@ -26,12 +28,11 @@ func main(){
 			fmt.Println(string(buffer[:n]))
 		}
 	}()
-
-	_, err = conn.Write([]byte("Beep Bop"))
-	if err != nil {
-        fmt.Println("Error writing to server:", err)
-        return
+    scanner := bufio.NewScanner(os.Stdin)
+    for {
+        scanner.Scan()
+        message := scanner.Text()
+        conn.Write([]byte(message))
     }
 
-	select{}
 }
