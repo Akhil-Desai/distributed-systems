@@ -38,6 +38,24 @@ func uploadFile(w http.ResponseWriter, r *http.Request){
 }
 
 func downloadFile(w http.ResponseWriter, r *http.Request){
+
+    fileName := r.URL.Query().Get("Filename")
+
+    file,err := os.Open("FileStorageSystem/store/" + fileName)
+    if err != nil {
+        fmt.Println("Error", err)
+        return
+    }
+    defer file.Close()
+
+    w.Header().Set("Content-Disposition", "attachment; filename=" + fileName)
+    w.Header().Set("Content-Type", "application/octet-stream")
+
+    _,err = io.Copy(w, file)
+    if err != nil{
+        fmt.Println("Error writing file to client", err)
+        return
+    }
 	return
 }
 
