@@ -7,6 +7,8 @@ import (
     "os"
 )
 
+var fileMetadataStore map[string]map[string]interface{}
+
 func uploadFile(w http.ResponseWriter, r *http.Request){
     fmt.Println("File upload endpoint hit!")
 
@@ -23,25 +25,34 @@ func uploadFile(w http.ResponseWriter, r *http.Request){
     }
     defer file.Close()
 
-    dst,err := os.Create(handler.Filename)
+    dst,err := os.Create("../store/" + handler.Filename)
+
     if err != nil{
         fmt.Println("Create file err:", err)
     }
 
     defer dst.Close()
+
     _,err = io.Copy(dst, file)
     if err != nil {
         fmt.Println("Copy err:", err)
         return
     }
     fmt.Fprintf(w, "File saved: %s", handler.Filename)
+
+    fileMetadataStore[handler.Filename] = map[string]interface{} {
+        "size": handler.Size,
+        "header": handler.Header,
+    }
+
+    return
 }
 
 func downloadFile(w http.ResponseWriter, r *http.Request){
 
     fileName := r.URL.Query().Get("Filename")
 
-    file,err := os.Open("FileStorageSystem/store/" + fileName)
+    file,err := os.Open("../store/" + fileName)
     if err != nil {
         fmt.Println("Error", err)
         return
@@ -60,6 +71,9 @@ func downloadFile(w http.ResponseWriter, r *http.Request){
 }
 
 func main(){
+
+    fileMetadataStore = make(map[string]map[string]interface{})
+
 	http.HandleFunc("/upload", uploadFile)
 	http.HandleFunc("/download", downloadFile)
 
@@ -67,4 +81,5 @@ func main(){
 		fmt.Println("Error", err)
 	}
 	fmt.Println("Listening at port 8080")
+
 }
