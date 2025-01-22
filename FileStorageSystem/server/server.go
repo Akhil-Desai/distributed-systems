@@ -52,6 +52,14 @@ func downloadFile(w http.ResponseWriter, r *http.Request){
 
     fileName := r.URL.Query().Get("Filename")
 
+    //Check if FileName exist
+    exist := fileMetadataStore[fileName]
+
+    if exist == nil {
+        fmt.Println("Error file does not exist in the store")
+        return
+    }
+
     file,err := os.Open("../store/" + fileName)
     if err != nil {
         fmt.Println("Error", err)
