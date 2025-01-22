@@ -5,8 +5,10 @@ import (
 	"net/http"
     "io"
     "os"
+    "sync"
 )
 
+var storeMu sync.Mutex
 var fileMetadataStore map[string]map[string]interface{}
 
 func uploadFile(w http.ResponseWriter, r *http.Request){
@@ -40,10 +42,12 @@ func uploadFile(w http.ResponseWriter, r *http.Request){
     }
     fmt.Fprintf(w, "File saved: %s", handler.Filename)
 
+    storeMu.Lock()
     fileMetadataStore[handler.Filename] = map[string]interface{} {
         "size": handler.Size,
         "header": handler.Header,
     }
+    storeMu.Unlock()
 
     return
 }
@@ -53,7 +57,9 @@ func downloadFile(w http.ResponseWriter, r *http.Request){
     fileName := r.URL.Query().Get("Filename")
 
     //Check if FileName exist
+    storeMu.Lock()
     exist := fileMetadataStore[fileName]
+    storeMu.Unlock()
 
     if exist == nil {
         fmt.Println("Error file does not exist in the store")
