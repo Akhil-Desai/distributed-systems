@@ -9,6 +9,7 @@ package main
 import (
     "container/heap"
 	"fmt"
+    "time"
 )
 
 // ------------------
@@ -72,22 +73,38 @@ func (pq *PriorityQueue) update(t *Task, new_task func()interface{}, new_time in
 // -------------------
 //Scheduler
 type Scheduler_Methods interface{
-    AddTask(t Task)
+    AddTask(t *Task)
     Run()
 }
 
 type Scheduler struct {
     PQ *PriorityQueue
+    poll int
 }
 
-func (s *Scheduler) AddTask(t Task){
-    //Push the task into the PQ
+func (s *Scheduler) AddTask(t *Task){
+    //Push the task into the PQ,
+    s.PQ.Push(t)
     return
 }
 
 func (s *Scheduler) Run(){
     //Should keep alive while PQ is active
-    return
+    for {
+        if (s.PQ.Len()) > 0{
+            time.Sleep(time.Duration(s.poll) * time.Second)
+            task := s.PQ.Pop().(*Task)
+            fmt.Println(task.task())
+
+            if s.PQ.Len() > 0{
+                new_poll := (*s.PQ)[0].time
+                s.poll = new_poll - s.poll
+            } else {
+                fmt.Println("Event queue empty")
+                s.poll = 1
+            }
+        }
+    }
 }
 //--------------------
 
@@ -98,47 +115,40 @@ func main(){
 
     task1 := &Task{
         task: func() interface{} {
-            return a(5,10)
+            return a(1,2)
         },
         time: 10,
         index: 0,
     }
     task2 := &Task{
         task: func() interface{} {
-            return a(5,10)
+            return a(3,4)
         },
         time: 7,
         index: 0,
     }
     task3 := &Task{
         task: func() interface{} {
-            return a(5,10)
+            return a(5,6)
         },
-        time: 15,
+        time: 1,
         index: 0,
     }
 
-    task_arr := []*Task{task1, task2, task3}
+    PQ := make(PriorityQueue, 0)
 
-    pq := make(PriorityQueue, len(task_arr))
-    i := 0
+    heap.Init(&PQ)
 
-    for _, t := range task_arr {
-        t.index = i
-        pq[i] = t
-        i++
+    event_scheduler := &Scheduler{
+        PQ: &PQ,
+        poll: 1,
     }
 
+    go event_scheduler.Run()
 
-    heap.Init(&pq)
-    var eventQueue heap.Interface = &pq
+    event_scheduler.AddTask(task1)
+    event_scheduler.AddTask(task2)
+    event_scheduler.AddTask(task3)
 
-    for eventQueue.Len() > 0 {
-        new_task := eventQueue.Pop().(*Task)
-        fmt.Println(new_task.task())
-    }
-
-
-
-
+     select{}
 }
