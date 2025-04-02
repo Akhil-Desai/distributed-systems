@@ -7,9 +7,10 @@
 package main
 
 import (
-    "container/heap"
+	"container/heap"
 	"fmt"
-    "time"
+	"sync"
+	"time"
 )
 
 // ------------------
@@ -79,31 +80,72 @@ type Scheduler_Methods interface{
 
 type Scheduler struct {
     PQ *PriorityQueue
-    poll int
+    mutex sync.Mutex
+    newTaskCh chan struct{}
 }
 
 func (s *Scheduler) AddTask(t *Task){
     //Push the task into the PQ,
+    s.mutex.Lock()
     s.PQ.Push(t)
+    s.mutex.Unlock()
+
+    select{
+    case s.newTaskCh <- struct{}{}:
+
+    default:
+    }
     return
 }
 
 func (s *Scheduler) Run(){
     //Should keep alive while PQ is active
-    for {
-        if (s.PQ.Len()) > 0{
-            time.Sleep(time.Duration(s.poll) * time.Second)
-            task := s.PQ.Pop().(*Task)
-            fmt.Println(task.task())
+    startTime := time.Now()
 
-            if s.PQ.Len() > 0{
-                new_poll := (*s.PQ)[0].time
-                s.poll = new_poll - s.poll
-            } else {
-                fmt.Println("Event queue empty")
-                s.poll = 1
+    for {
+        s.mutex.Lock()
+        if s.PQ.Len() > 0 {
+            nextTask := (*s.PQ)[0]
+
+            elapsedTime := time.Since(startTime).Seconds()
+            remainingTime := nextTask.time - int(elapsedTime)
+
+            if remainingTime < 0 {
+                remainingTime = 0
+            }
+
+            waitDuration := time.Duration(remainingTime) * time.Second
+            s.mutex.Unlock()
+
+            timer := time.NewTimer(waitDuration)
+
+            select{
+            case <- timer.C:
+
+                s.mutex.Lock()
+                if s.PQ.Len() > 0 {
+                    task := heap.Pop(s.PQ).(*Task)
+                    s.mutex.Unlock()
+
+                    go func(t *Task){
+                        result := t.task()
+                        fmt.Println(result)
+                    }(task)
+                } else {
+                    s.mutex.Unlock()
+                }
+            case <- s.newTaskCh:
+                timer.Stop()
+                continue
+            }
+        } else {
+            s.mutex.Unlock()
+            select {
+            case <- s.newTaskCh:
+                continue
             }
         }
+
     }
 }
 //--------------------
@@ -141,7 +183,7 @@ func main(){
 
     event_scheduler := &Scheduler{
         PQ: &PQ,
-        poll: 1,
+        newTaskCh: make(chan struct{}, 1),
     }
 
     go event_scheduler.Run()
