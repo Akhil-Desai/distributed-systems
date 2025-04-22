@@ -1,10 +1,12 @@
 package broadcaster
 
 import (
+	"encoding/binary"
 	"fmt"
 	"net"
 	"sync"
 	"time"
+	"io"
 )
 
 var(
@@ -14,13 +16,12 @@ var(
 
 var(
 	messageQueue chan []byte
-    notif chan struct{}
 )
 
 func init(){
 	clients = make(map[net.Conn]bool)
 	messageQueue = make(chan []byte)
-    notif = make(chan struct{})
+
 }
 
 
@@ -55,9 +56,6 @@ func startBroadcaster(){
 		}
 
 		go handleClientRead(incomingConn)
-
-		//Handle our incoming clients reads
-
 	}
 }
 
@@ -65,19 +63,28 @@ func handleClientRead(conn net.Conn){
 	defer conn.Close()
 
 	//Create a buffer to handle incoming bytes
-	//Strategy to handle big messages that may be partioned and prevent interleaved messages
-	//Attach a header to each client message indicating message size, and tell this to read that size of message before letting go of the lock
-	buffer := make([]byte, 1024)
+	header := make([]byte, 32)
 	for {
 
-        //I could set a timeout here if the buffer is empty for n seconds we could kick the user from the channel for inactivity
-        if err := conn.SetReadDeadline(time.Now().Add(60 * time.Second)); err != nil {
+        //Set Timeout
+        if err := setTimeout(conn); err != nil {
             fmt.Println("Error setting deadline:", err)
         }
 
-		bytes,err := conn.Read(buffer)
+		if _,err := io.ReadFull(conn, header); err != nil {
+			return
+		}
 
-		if err != nil{
+		//Set Timeout
+		if err := setTimeout(conn); err != nil {
+            fmt.Println("Error setting deadline:", err)
+        }
+
+		//Initialize buffer of message size
+		msize := binary.BigEndian.Uint32(header)
+		buffer := make([]byte, msize)
+
+		if _,err := io.ReadFull(conn,buffer); err != nil{
 
             if netErr,ok := err.(net.Error); ok && netErr.Timeout() {
                 fmt.Println("Connection timed out")
@@ -91,10 +98,18 @@ func handleClientRead(conn net.Conn){
 			return
 		}
 
-		message := make([]byte, bytes)
-		copy(message, buffer[:bytes])
+		message := make([]byte, msize)
+		copy(message, buffer)
 
 		messageQueue <- message
+
+
 	}
 
+}
+
+
+
+func setTimeout(c net.Conn) (error) {
+	return c.SetReadDeadline(time.Now().Add(60 * time.Second))
 }
