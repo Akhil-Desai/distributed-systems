@@ -9,17 +9,19 @@ import (
 	"io"
 )
 
-var(
-	clients map[net.Conn]bool
-	clientsMutex sync.Mutex
-)
+type client struct {
+	conn net.Conn
+	inbox chan []byte
+}
 
 var(
+	clients map[*client]bool
+	clientsMutex sync.Mutex
 	messageQueue chan []byte
 )
 
 func init(){
-	clients = make(map[net.Conn]bool)
+	clients = make(map[*client]bool)
 	messageQueue = make(chan []byte)
 
 }
@@ -27,7 +29,7 @@ func init(){
 
 
 //Initialize a broadcaster that our client's can connect too on port 5001
-func startBroadcaster(){
+func StartBroadcaster(){
 
 	ln,err := net.Listen("tcp","localhost:5001")
 
@@ -47,36 +49,65 @@ func startBroadcaster(){
 			return
 		}
 
+		c := &client{
+			conn: incomingConn,
+			inbox: make(chan []byte,10),
+		}
+
 		// Store our connecting clients
-		_,exist := clients[incomingConn]
+		_,exist := clients[c]
 		if !exist {
 			clientsMutex.Lock()
-			clients[incomingConn] = true
+			clients[c] = true
 			clientsMutex.Unlock()
 		}
 
-		go handleClientRead(incomingConn)
+		go handleClientRead(c)
+		go handleClientWrite(c)
 	}
 }
 
-func handleClientRead(conn net.Conn){
-	defer conn.Close()
+func messageBroker(mq chan []byte){
+	//Check my message queue
+	//Write the message to all connections except the connection that has sent the message
+	return
+}
+
+//Write to our Client
+func handleClientWrite(c *client){
+	defer c.conn.Close()
+
+	for msg := range c.inbox {
+		if _,err := c.conn.Write(msg); err != nil {
+			//clean up or retry
+			clientsMutex.Lock()
+            delete(clients, c)
+            clientsMutex.Unlock()
+			return
+		}
+
+	}
+}
+
+//Read from our client
+func handleClientRead(c *client){
+	defer c.conn.Close()
 
 	//Create a buffer to handle incoming bytes
 	header := make([]byte, 32)
 	for {
 
         //Set Timeout
-        if err := setTimeout(conn); err != nil {
+        if err := setTimeout(c.conn); err != nil {
             fmt.Println("Error setting deadline:", err)
         }
 
-		if _,err := io.ReadFull(conn, header); err != nil {
+		if _,err := io.ReadFull(c.conn, header); err != nil {
 			return
 		}
 
 		//Set Timeout
-		if err := setTimeout(conn); err != nil {
+		if err := setTimeout(c.conn); err != nil {
             fmt.Println("Error setting deadline:", err)
         }
 
@@ -84,7 +115,7 @@ func handleClientRead(conn net.Conn){
 		msize := binary.BigEndian.Uint32(header)
 		buffer := make([]byte, msize)
 
-		if _,err := io.ReadFull(conn,buffer); err != nil{
+		if _,err := io.ReadFull(c.conn,buffer); err != nil{
 
             if netErr,ok := err.(net.Error); ok && netErr.Timeout() {
                 fmt.Println("Connection timed out")
@@ -93,7 +124,7 @@ func handleClientRead(conn net.Conn){
             }
             //Clean up client from map
             clientsMutex.Lock()
-            delete(clients, conn)
+            delete(clients, c)
             clientsMutex.Unlock()
 			return
 		}
