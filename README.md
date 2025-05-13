@@ -65,4 +65,4 @@ Welcome to the **Distributed Systems Projects** repository! This collection show
 
 ---
 
-> ✨ *Happy Learning! Feel free to contribute, suggest improvements, or ask questions via issues or pull requests.*
+> ✨Feel free to contribute, suggest improvements, or ask questions via issues or pull requests.*
