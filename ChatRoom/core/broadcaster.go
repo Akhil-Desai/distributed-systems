@@ -31,19 +31,24 @@ type Client struct {
 	inbox chan []byte
 }
 
+type Message struct {
+	message []byte
+	sender  *Client
+}
+
 // Broadcaster manages multiple chat clients and a message queue for broadcasting messages.
 // It is safe for concurrent use by multiple goroutines.
 type Broadcaster struct {
 	clients      map[*Client]bool
 	clientsMutex sync.Mutex
-	messageQueue chan []byte
+	messageQueue chan *Message
 }
 
 // NewBroadcaster creates and returns a new Broadcaster with initialized fields.
 func NewBroadcaster() *Broadcaster {
 	return &Broadcaster{
 		clients:      make(map[*Client]bool),
-		messageQueue: make(chan []byte),
+		messageQueue: make(chan *Message),
 	}
 }
 
@@ -52,6 +57,8 @@ func NewBroadcaster() *Broadcaster {
 func StartBroadcaster() {
 
 	bc := NewBroadcaster()
+
+	go messageBroker(bc)
 
 	ln, err := net.Listen("tcp", SERVER)
 	if err != nil {
@@ -88,10 +95,17 @@ func StartBroadcaster() {
 
 // messageBroker is a placeholder for the message distribution logic.
 // It is intended to read messages from the message queue and broadcast them to all clients except the sender.
-func messageBroker(mq chan []byte) {
+func messageBroker(bc *Broadcaster) {
 	//Check my message queue
 	//Write the message to all connections except the connection that has sent the message
-	return
+	for mq := range bc.messageQueue {
+		for c := range bc.clients {
+			if mq.sender != c {
+				c.inbox <- mq.message
+			}
+		}
+	}
+
 }
 
 // handleClientWrite listens for messages on the client's inbox channel and writes them to the client's connection.
@@ -101,14 +115,14 @@ func handleClientWrite(c *Client, bc *Broadcaster) {
 
 	for msg := range c.inbox {
 		if _, err := c.conn.Write(msg); err != nil {
-			//clean up or retry
+
+			fmt.Println("Error", err)
 			bc.clientsMutex.Lock()
 			delete(bc.clients, c)
 			bc.clientsMutex.Unlock()
-			return
 		}
-
 	}
+
 }
 
 // handleClientRead reads messages from the client's connection, handles timeouts, and pushes received messages to the broadcaster's message queue.
@@ -152,10 +166,14 @@ func handleClientRead(c *Client, bc *Broadcaster) {
 			return
 		}
 
-		message := make([]byte, msize)
-		copy(message, buffer)
+		m := make([]byte, msize)
+		copy(m, buffer)
 
-		bc.messageQueue <- message
+		newMessage := &Message{
+			message: m,
+			sender:  c,
+		}
+		bc.messageQueue <- newMessage
 
 	}
 
