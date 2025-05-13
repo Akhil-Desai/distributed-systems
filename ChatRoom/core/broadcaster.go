@@ -96,16 +96,23 @@ func StartBroadcaster() {
 // messageBroker is a placeholder for the message distribution logic.
 // It is intended to read messages from the message queue and broadcast them to all clients except the sender.
 func messageBroker(bc *Broadcaster) {
+
+	workers := 100
 	//Check my message queue
 	//Write the message to all connections except the connection that has sent the message
-	for mq := range bc.messageQueue {
-		for c := range bc.clients {
-			if mq.sender != c {
-				c.inbox <- mq.message
+	for i := 0; i < workers; i ++ {
+		go func(){
+			for msg := range bc.messageQueue{
+				bc.clientsMutex.Lock()
+				for c := range bc.clients{
+					if msg.sender != c {
+						c.inbox <- msg.message
+					}
+				}
+				bc.clientsMutex.Unlock()
 			}
-		}
+		}()
 	}
-
 }
 
 // handleClientWrite listens for messages on the client's inbox channel and writes them to the client's connection.
