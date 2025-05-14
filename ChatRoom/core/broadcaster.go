@@ -17,7 +17,7 @@ const (
 	// SERVER is the address where the broadcaster listens for incoming connections.
 	SERVER = "localhost:5001"
 	// headerSize is the size of the header for incoming messages.
-	headerSize = 32
+	headerSize = 4
 	// readTimeout is the duration before a read operation times out.
 	readTimeout = 60 * time.Second
 	// inboxBufSize is the buffer size for the client's inbox channel.
@@ -121,6 +121,16 @@ func handleClientWrite(c *Client, bc *Broadcaster) {
 	defer c.conn.Close()
 
 	for msg := range c.inbox {
+		header := make([]byte, 4)
+		binary.BigEndian.PutUint32(header, uint32(len(msg)))
+		if _, err := c.conn.Write(header); err != nil {
+			fmt.Println("Error writing header:", err)
+			bc.clientsMutex.Lock()
+			delete(bc.clients, c)
+			bc.clientsMutex.Unlock()
+			return
+    	}
+
 		if _, err := c.conn.Write(msg); err != nil {
 
 			fmt.Println("Error", err)
