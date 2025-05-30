@@ -1,10 +1,10 @@
-# 🚀 Distributed Systems Projects
+# Distributed Systems Projects
 
 Welcome to the **Distributed Systems Projects** repository! This collection showcases hands-on projects that demonstrate core concepts in distributed computing. Each project is designed to help you learn by building and experimenting. Dive in and explore!
 
 ---
 
-## 📚 Projects Overview
+## Projects Overview
 
 | # | Project Name | Description | Learning Goal |
 |---|--------------|-------------|---------------|
@@ -17,7 +17,7 @@ Welcome to the **Distributed Systems Projects** repository! This collection show
 
 ---
 
-## 💬 ChatRoom
+## ChatRoom
 
 **Description:** A simple chat room application where multiple clients can connect and exchange messages in real time.
 
@@ -25,7 +25,7 @@ Welcome to the **Distributed Systems Projects** repository! This collection show
 
 ---
 
-## 🔗 Client-Server-Communication
+## Client-Server-Communication
 
 **Description:** A basic client-server model demonstrating direct communication between a client and a server.
 
@@ -33,7 +33,7 @@ Welcome to the **Distributed Systems Projects** repository! This collection show
 
 ---
 
-## 🗄️ FileStorageSystem
+## FileStorageSystem
 
 **Description:** A distributed file storage system that allows clients to store and retrieve files from a server.
 
@@ -41,7 +41,7 @@ Welcome to the **Distributed Systems Projects** repository! This collection show
 
 ---
 
-## 🗝️ Key-Value Store
+## Key-Value Store
 
 **Description:** A simple distributed key-value store supporting basic CRUD operations.
 
@@ -49,7 +49,7 @@ Welcome to the **Distributed Systems Projects** repository! This collection show
 
 ---
 
-## ⚖️ Load-Balancer
+## Load-Balancer
 
 **Description:** A load balancer that distributes incoming client requests across multiple backend servers.
 
@@ -57,7 +57,7 @@ Welcome to the **Distributed Systems Projects** repository! This collection show
 
 ---
 
-## ⏰ Time-Based-Task-Scheduler
+## Time-Based-Task-Scheduler
 
 **Description:** A scheduler that executes tasks at specified times, simulating distributed cron jobs.
 
@@ -65,4 +65,4 @@ Welcome to the **Distributed Systems Projects** repository! This collection show
 
 ---
 
-> ✨Feel free to contribute, suggest improvements, or ask questions via issues or pull requests.*
+> Feel free to contribute, suggest improvements, or ask questions via issues or pull requests.*
