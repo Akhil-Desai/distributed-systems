@@ -54,11 +54,13 @@ func TestCommunication(t *testing.T){
 	wg.Add(clients)
 
 	for i,conn := range conns {
-		msg := []byte(testMessages[i])
-		header := make([]byte, 4)
-		binary.BigEndian.PutUint32(header, uint32(len(msg)))
-		conn.Write(header)
-		conn.Write(msg)
+		go func(i int, conn net.Conn){
+			msg := []byte(testMessages[i])
+			header := make([]byte, 4)
+			binary.BigEndian.PutUint32(header, uint32(len(msg)))
+			conn.Write(header)
+			conn.Write(msg)
+		}(i,conn)
 	}
 
 

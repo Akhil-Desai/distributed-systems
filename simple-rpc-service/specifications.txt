@@ -1,0 +1,31 @@
+Simple RPC service
+
+Context: RPC is a method to communicate resources over a network. RPC is used to make function calls look like they are being executed locally but are actually being executed on a remote machine. Benefits of using RPC include performance where the data being sent can be serialized leading to lighter loads
+
+Objective: Create a simple rpc service in which a client can send a method to be executed that will happen on the server
+
+------
+
+General
+
+1. Standarize request and response formats
+
+Client Side stub
+
+1.We need to initalize a RPCClientStub which acts as our abstraction layer for the client to execute a function over the network
+2. The data needs to serialized and deserailized when sending and recieving respectively
+
+Server Side Stub
+
+1. Listen on our server for incoming connections we might need to start a thread within our server process for multiple client connections
+2. Same as client side stub step 2
+3. Maintain a valid list of callable functions
+4. We can cache repeated calls for performance optimization
+
+
+Optional Features to Implement:
+
+Timeout/Retries
+Graceful Shutdown
+Dynamic Function Registration, Server Side
+Support streaming data for larger request/response
