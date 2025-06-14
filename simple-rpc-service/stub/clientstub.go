@@ -38,10 +38,10 @@ func (c *RPCClientStub) init(host string, port string) error{
 	return nil
 }
 
-func (c *RPCClientStub) factory(method string, a int64, b int64){
+func (c *RPCClientStub) invoke(method string, a int64, b int64){
 
 	//cache check
-	
+
 
 	//[length][string bytes][int64][int64]
 	buff := make([]byte, 20 + uint32(len(method)))
