@@ -6,8 +6,6 @@ import (
 	"log"
 	"net"
 	"math"
-	"sync"
-	"strconv"
 )
 
 const (
@@ -30,11 +28,9 @@ type RPCClientStub struct {
 	conn net.Conn
 	host string
 	port string
-	cache map[string]int64
-	sync.Mutex
 }
 
-func (c *RPCClientStub) Init(host string, port string) error{
+func (c *RPCClientStub) Init(host string, port string) (error) {
 	conn,err := net.Dial("tcp",host + ":" + port );
 	if err != nil {
 		return err
@@ -48,17 +44,6 @@ func (c *RPCClientStub) Invoke(method string, a int64, b int64) (int64,error){
 	if (b > 0 && a > (math.MaxInt - b)) || (a > 0 && b > (math.MaxInt - b)) {
 		return -1,fmt.Errorf("Integer overflow 💥")
 	}
-	//ensure we have a consistent structure with a and b so we don't get a cache miss
-	//a will always be the smaller value
-	if b < a { a,b = b,a }
-
-	//cache check
-	c.Mutex.Lock()
-	cacheKey := method + strconv.FormatInt(a, 10) + strconv.FormatInt(b, 10)
-	if ret,ok := c.cache[cacheKey]; ok {
-		return ret,nil
-	}
-	c.Mutex.Unlock()
 
 	//[length][string bytes][int64][int64]
 	buff := make([]byte, initBuffSize + uint32(len(method)))
@@ -103,8 +88,5 @@ func (c *RPCClientStub) Invoke(method string, a int64, b int64) (int64,error){
 
 	ret := int64(binary.BigEndian.Uint64(buff))
 
-	c.Mutex.Lock()
-	c.cache[cacheKey] = ret
-	c.Mutex.Unlock()
 	return ret, nil
 }
