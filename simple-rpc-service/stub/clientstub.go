@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"log"
-	"net"
 	"math"
+	"net"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 )
 
 const (
-	initBuffSize 	= 20
+	initBuffSize    = 20
 	lengthByteSize  = 4
 	integerByteSize = 8
 )
@@ -26,12 +26,10 @@ type ClientStubber interface {
 
 type RPCClientStub struct {
 	conn net.Conn
-	host string
-	port string
 }
 
-func (c *RPCClientStub) Init(host string, port string) (error) {
-	conn,err := net.Dial("tcp",host + ":" + port );
+func (c *RPCClientStub) Init(host string, port string) error {
+	conn, err := net.Dial("tcp", host+":"+port)
 	if err != nil {
 		return err
 	}
@@ -39,35 +37,35 @@ func (c *RPCClientStub) Init(host string, port string) (error) {
 	return nil
 }
 
-func (c *RPCClientStub) Invoke(method string, a int64, b int64) (int64,error){
+func (c *RPCClientStub) Invoke(method string, a int64, b int64) (int64, error) {
 
-	if (b > 0 && a > (math.MaxInt - b)) || (a > 0 && b > (math.MaxInt - b)) {
-		return -1,fmt.Errorf("Integer overflow 💥")
+	if (b > 0 && a > (math.MaxInt-b)) || (a > 0 && b > (math.MaxInt-b)) {
+		return -1, fmt.Errorf("Integer overflow 💥")
 	}
 
 	//[length][string bytes][int64][int64]
-	buff := make([]byte, initBuffSize + uint32(len(method)))
+	buff := make([]byte, initBuffSize+uint32(len(method)))
 	offset := 0
 
 	binary.BigEndian.PutUint32(buff[:lengthByteSize], uint32(len(method)))
 	offset += lengthByteSize
 
-	copy(buff[offset:offset + len(method)], []byte(method))
+	copy(buff[offset:offset+len(method)], []byte(method))
 	offset += len(method)
 
-	binary.PutVarint(buff[offset: offset + integerByteSize], a)
+	binary.PutVarint(buff[offset:offset+integerByteSize], a)
 	offset += integerByteSize
 
-	binary.PutVarint(buff[offset: offset + integerByteSize], b)
+	binary.PutVarint(buff[offset:offset+integerByteSize], b)
 	offset += integerByteSize
 
-	n,err := c.conn.Write(buff)
+	n, err := c.conn.Write(buff)
 
 	if err != nil {
 		//graceful shutdown
 		return -1, fmt.Errorf("Error writing to buffer %s 💥", err)
 	}
-	if n != offset{
+	if n != offset {
 		//retry n times in the case of a network problems
 		log.Println("Did not write all bytes from buffer...retrying 🔄")
 		return -1, fmt.Errorf("Fatal: could not write all bytes...wrote %v bytes 💥", n)
