@@ -1,0 +1,22 @@
+name: rpc-ci
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out build
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: action/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build
+        run: |
+          echo "Building...🔨"
+          go build main.go
+        working-directory: simple-rpc-service
