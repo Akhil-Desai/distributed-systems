@@ -54,9 +54,9 @@ func (c *RPCClientStub) Invoke(method string, a int32, b int32) (int32, error) {
 	}
 
 	//recieve data back
-	msg = make([]byte, 8)
+	msg = make([]byte, 4)
 	n, err := c.conn.Read(msg)
-	if n != 8 {
+	if n != 4 {
 		//retry read
 		log.Println("Did not read all bytes from buffer...retrying 🔄")
 		return -1, fmt.Errorf("fatal: could not read all bytes...read %v bytes 💥", n)
@@ -66,7 +66,7 @@ func (c *RPCClientStub) Invoke(method string, a int32, b int32) (int32, error) {
 		return -1, fmt.Errorf("error occured reading from buffer: %s 💥", err)
 	}
 
-	ret := int32(binary.BigEndian.Uint64(msg))
+	ret := int32(binary.BigEndian.Uint32(msg))
 
 	return ret, nil
 }
