@@ -13,7 +13,7 @@ import (
 
 type ServerStubber interface {
 	Init(port string, service interface{})
-	handleRPCInvoke() error
+	ServerSkeleton() error
 }
 
 type RPCServerStub struct {
@@ -37,7 +37,7 @@ func (s *RPCServerStub) Init(port string, service interface{}) error {
 }
 
 
-func (s *RPCServerStub) handleRPCInvoke() error {
+func (s *RPCServerStub) ServerSkeleton() error {
 
 	//stubbing right now
 	methodName := "stub"
@@ -45,12 +45,12 @@ func (s *RPCServerStub) handleRPCInvoke() error {
 	b := int64(1)
 
 	s.Mutex.Lock()
-	cacheKey := methodName+ strconv.FormatInt(a, 10) + strconv.FormatInt(b, 10)
-	if ret,ok := (*s.cache)[cacheKey]; ok {
-		fmt.Print(ret)
+	defer s.Mutex.Unlock()
+
+	cacheKey := methodName + strconv.FormatInt(a, 10) + strconv.FormatInt(b, 10)
+	if _,ok := (*s.cache)[cacheKey]; ok { //Remember to return _
 		return nil
 	}
-	s.Mutex.Unlock()
 
 	if s.service == nil {
 		return fmt.Errorf("methods are not registerd please establish...💥")
@@ -73,6 +73,8 @@ func (s *RPCServerStub) handleRPCInvoke() error {
 	if err != nil {
 		return fmt.Errorf("issue occured invoking %s...💥", method)
 	}
+
+	(*s.cache)[cacheKey] = result
 
 	fmt.Print(result)
 
