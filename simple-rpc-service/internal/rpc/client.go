@@ -9,13 +9,13 @@ import (
 
 const (
 	DefaultHost = "localhost"
-	DefaultPort = "5001"
+	DefaultPort = ":5001"
 )
 
 
 type ClientStubber interface {
 	Init(host string, port string) error
-	Invoke(method string, a int64, b int64)
+	Invoke(method string, a int32, b int32)
 }
 
 type RPCClientStub struct {
@@ -35,8 +35,6 @@ func (c *RPCClientStub) Init(host string, port string) error {
 
 func (c *RPCClientStub) Invoke(method string, a int32, b int32) (int32, error) {
 
-
-	//[length][string bytes][int64][int64]
 	msg,err := (&MessageBuilder{}).
 			   SetSignature(method).
 			   SetA(a).
