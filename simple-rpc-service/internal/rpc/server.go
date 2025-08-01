@@ -1,12 +1,14 @@
 package stub
 
 import (
+	"encoding/binary"
 	"fmt"
 	"net"
 	"reflect"
-	"sync"
-	"strconv"
 	"simple-rpc-service/internal/calculator"
+	"strconv"
+	"sync"
+	"time"
 )
 
 type ServerStubber interface {
@@ -84,7 +86,18 @@ func (s *RPCServerStub) ServerSkeleton(conn net.Conn) (int32,error) {
 
 	(*s.cache)[cacheKey] = result
 
-	fmt.Print(result)
+	writeMsg := make([]byte,8)
+	binary.PutVarint(writeMsg, int64(result))
+
+	conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
+	_, err = conn.Write(writeMsg)
+	if err != nil {
+		if netErr,ok := err.(net.Error); ok && netErr.Timeout() {
+			return -1, fmt.Errorf("write timedout: %v", err)
+		}
+		return -1, fmt.Errorf("write failed: %v", err)
+	}
+
 
 	return result,nil
 }
