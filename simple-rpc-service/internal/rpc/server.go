@@ -49,10 +49,21 @@ func (s *RPCServerStub) HandleConnections() {
 
 func (s *RPCServerStub) ServerSkeleton(conn net.Conn) (int32,error) {
 
-	//stubbing right now
-	methodName := "stub"
-	a := int32(1)
-	b := int32(1)
+	defer conn.Close()
+
+	rpcBuffer := make([]byte,1024)
+	if  _, err := conn.Read(rpcBuffer); err != nil {
+		return -1, fmt.Errorf("error reading from buffer... %s", err)
+	}
+	offset := 0
+	methodLength := int(binary.BigEndian.Uint32(rpcBuffer[:4]))
+	offset += 4
+	methodName := string(rpcBuffer[offset:methodLength])
+	offset += methodLength
+	a := int32(binary.BigEndian.Uint32(rpcBuffer[offset: offset + 4]))
+	offset += 4
+	b := int32(binary.BigEndian.Uint64(rpcBuffer[offset: offset + 4]))
+	offset += 4
 
 	s.Mutex.Lock()
 	defer s.Mutex.Unlock()
