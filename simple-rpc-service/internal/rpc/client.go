@@ -14,7 +14,7 @@ const (
 )
 
 type ClientStubber interface {
-	Init(host string, port string) error
+	Init() error
 	Invoke(method string, a int32, b int32)
 }
 
@@ -24,8 +24,8 @@ type RPCClientStub struct {
 
 //------------------
 
-func (c *RPCClientStub) Init(host string, port string) error {
-	conn, err := net.Dial("tcp", host+":"+port)
+func (c *RPCClientStub) Init() error {
+	conn, err := net.Dial("tcp", DefaultHost+":"+DefaultPort)
 	if err != nil {
 		return err
 	}
@@ -34,6 +34,7 @@ func (c *RPCClientStub) Init(host string, port string) error {
 }
 
 func (c *RPCClientStub) Invoke(method string, a int32, b int32) (int32, error) {
+
 
 	msg, err := (&MessageBuilder{}).
 		SetSignature(method).
@@ -59,6 +60,7 @@ func (c *RPCClientStub) Invoke(method string, a int32, b int32) (int32, error) {
 			log.Printf("read time out occured...retrying; read %d bytes 🔄", n)
 			//do a retry
 		}
+		c.conn.Close()
 		return -1, fmt.Errorf("error occured reading from buffer: %s 💥", err)
 	}
 
