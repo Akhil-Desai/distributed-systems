@@ -25,11 +25,12 @@ type RPCClientStub struct {
 //------------------
 
 func (c *RPCClientStub) Init() error {
-	conn, err := net.Dial("tcp", DefaultHost+":"+DefaultPort)
+	conn, err := net.Dial("tcp", DefaultHost+DefaultPort)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to connect to server: %v", err)
 	}
 	c.conn = conn
+	fmt.Println("Connection established")
 	return nil
 }
 

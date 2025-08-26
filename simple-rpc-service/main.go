@@ -1,10 +1,17 @@
 package main
 
 import (
-  "fmt"
+	"fmt"
+	"simple-rpc-service/cmd/client"
+	"simple-rpc-service/cmd/server"
 )
 
 
 func main() {
-  fmt.Printf("Hello World!")
+
+	go cmdserver.StartServer()
+
+	fmt.Print(cmdclient.ClientCall())
+
+
 }

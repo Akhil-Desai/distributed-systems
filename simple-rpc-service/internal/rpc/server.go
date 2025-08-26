@@ -58,11 +58,11 @@ func (s *RPCServerStub) ServerSkeleton(conn net.Conn) (int32,error) {
 	offset := 0
 	methodLength := int(binary.BigEndian.Uint32(rpcBuffer[:4]))
 	offset += 4
-	methodName := string(rpcBuffer[offset:methodLength])
+	methodName := string(rpcBuffer[offset:offset + methodLength])
 	offset += methodLength
 	a := int32(binary.BigEndian.Uint32(rpcBuffer[offset: offset + 4]))
 	offset += 4
-	b := int32(binary.BigEndian.Uint64(rpcBuffer[offset: offset + 4]))
+	b := int32(binary.BigEndian.Uint32(rpcBuffer[offset: offset + 4]))
 	offset += 4
 
 	s.Mutex.Lock()
@@ -90,18 +90,15 @@ func (s *RPCServerStub) ServerSkeleton(conn net.Conn) (int32,error) {
 	returned := method.Call(inArgs)
 
 	result := returned[0].Interface().(int32)
-	err := returned[1].Interface().(error)
-	if err != nil {
-		return -1,fmt.Errorf("issue occured invoking %s...💥", method)
-	}
+
 
 	(*s.cache)[cacheKey] = result
 
-	writeMsg := make([]byte,8)
-	binary.PutVarint(writeMsg, int64(result))
+	writeMsg := make([]byte,4)
+	binary.BigEndian.PutUint32(writeMsg, uint32(result))
 
 	conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
-	_, err = conn.Write(writeMsg)
+	_, err := conn.Write(writeMsg)
 	if err != nil {
 		if netErr,ok := err.(net.Error); ok && netErr.Timeout() {
 			return -1, fmt.Errorf("write timedout: %v", err)

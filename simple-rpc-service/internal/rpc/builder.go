@@ -37,10 +37,10 @@ func (mb *MessageBuilder) Build() ([]byte,error) {
 	copy(msg[offset:], []byte(mb.signature))
 	offset += len(mb.signature)
 
-	binary.PutVarint(msg[offset:], int64(mb.a))
+	binary.BigEndian.PutUint32(msg[offset:], uint32(mb.a))
 	offset += 4
 
-	binary.PutVarint(msg[offset:], int64(mb.b))
+	binary.BigEndian.PutUint32(msg[offset:], uint32(mb.b))
 	offset += 4
 
 	return msg,nil
