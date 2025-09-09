@@ -1,4 +1,5 @@
-# Objective: Multi-Node Key-Value Store with Replication
+## Objective: Multi-Node Key-Value Store with Replication
+
 
 ## Replication
 Replication is the process of keeping multiple nodes alive with the same data as the current main node.
