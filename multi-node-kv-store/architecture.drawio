@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="Za0W1qb_h3sbJ9pRvx2K" name="System Context">
-        <mxGraphModel dx="11350" dy="875" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="10000" pageHeight="10000" math="0" shadow="0">
+        <mxGraphModel dx="11220" dy="868" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="10000" pageHeight="10000" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -87,56 +87,104 @@
         </mxGraphModel>
     </diagram>
     <diagram id="d8zvd9bX9l0QV6RCtYiT" name="Container Diagram">
-        <mxGraphModel dx="2077" dy="1346" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="10000" pageHeight="10000" math="0" shadow="0">
+        <mxGraphModel dx="1220" dy="868" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="10000" pageHeight="10000" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="rzViPqrUrXqYsCb6-TxO-6" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="rzViPqrUrXqYsCb6-TxO-1" target="ZrNUuhQDX01v9lTRxY3D-1">
+                <mxCell id="rzViPqrUrXqYsCb6-TxO-6" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="rzViPqrUrXqYsCb6-TxO-1" target="ZrNUuhQDX01v9lTRxY3D-1" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="rzViPqrUrXqYsCb6-TxO-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="ciOh5jKht-e7GsHXnUFe-1" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="rzViPqrUrXqYsCb6-TxO-1" target="5cNF99poPbmCpLrNY1MU-1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rzViPqrUrXqYsCb6-TxO-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="550" y="130" width="480" height="480" as="geometry"/>
                 </mxCell>
-                <mxCell id="X6nsKMDQwO9HM_RLX5Se-1" value="Container Diagram" style="text;strokeColor=none;fillColor=none;html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+                <mxCell id="X6nsKMDQwO9HM_RLX5Se-1" value="Container Diagram" style="text;strokeColor=none;fillColor=none;html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" parent="1" vertex="1">
                     <mxGeometry x="30" y="10" width="200" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="ZrNUuhQDX01v9lTRxY3D-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-4" style="edgeStyle=none;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ZrNUuhQDX01v9lTRxY3D-1" target="ikNza2xgGSqLDH8rGNYe-1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-5" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="ZrNUuhQDX01v9lTRxY3D-1" target="5cNF99poPbmCpLrNY1MU-1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ZrNUuhQDX01v9lTRxY3D-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="40" y="520" width="470" height="470" as="geometry"/>
                 </mxCell>
-                <mxCell id="ZrNUuhQDX01v9lTRxY3D-2" value="Node Router" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="ZrNUuhQDX01v9lTRxY3D-2" value="Node Router" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="40" y="480" width="90" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="p42ME-GSs9-6xY9s_jFP-1" value="Node Event Consumer&lt;div&gt;consumes event from health checker communicating with Node map to add or remove nodes. Sending dead leader event to failover&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="p42ME-GSs9-6xY9s_jFP-1" value="Node Event Consumer&lt;div&gt;consumes event from health checker communicating with Node map to add or remove nodes. Sending dead leader event to failover&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="800" y="270" width="200" height="200" as="geometry"/>
                 </mxCell>
-                <mxCell id="r1j6yeN-ofgW507uEtCL-1" value="Routing Algorithm&lt;div&gt;responsible for sending the respective request (e.g. Round Robin) including knowing writes go to a leader&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="r1j6yeN-ofgW507uEtCL-1" value="Routing Algorithm&lt;div&gt;responsible for sending the respective request (e.g. Round Robin) including knowing writes go to a leader&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="60" y="660" width="200" height="200" as="geometry"/>
                 </mxCell>
-                <mxCell id="Aotsa2FnFiPXvb8GM3Xf-1" value="Dead Leader Writer&lt;div&gt;responsible for sending any write request to a message queue. Takes over write request when leader node is declared dead&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="Aotsa2FnFiPXvb8GM3Xf-1" value="Dead Leader Writer&lt;div&gt;responsible for sending any write request to a message queue. Takes over write request when leader node is declared dead&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="280" y="660" width="200" height="200" as="geometry"/>
                 </mxCell>
-                <mxCell id="rzViPqrUrXqYsCb6-TxO-2" value="Node Registry" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="rzViPqrUrXqYsCb6-TxO-2" value="Node Registry" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="550" y="90" width="100" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="ZrNUuhQDX01v9lTRxY3D-3" value="Node Map&amp;nbsp;&lt;div&gt;responsbile for keeping up to date source of truth for nodes within cluster&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="ZrNUuhQDX01v9lTRxY3D-3" value="Node Map&amp;nbsp;&lt;div&gt;responsbile for keeping up to date source of truth for nodes within cluster&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="570" y="270" width="200" height="200" as="geometry"/>
                 </mxCell>
-                <mxCell id="rG46hLfEoKRTjfuRTqQA-6" style="edgeStyle=none;html=1;" edge="1" parent="1" source="rG46hLfEoKRTjfuRTqQA-2">
+                <mxCell id="rG46hLfEoKRTjfuRTqQA-6" style="edgeStyle=none;html=1;" parent="1" source="rG46hLfEoKRTjfuRTqQA-2" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="840" y="620" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="rG46hLfEoKRTjfuRTqQA-2" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="rG46hLfEoKRTjfuRTqQA-2" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="600" y="1170" width="500" height="500" as="geometry"/>
                 </mxCell>
-                <mxCell id="rG46hLfEoKRTjfuRTqQA-3" value="Health Checker" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="rG46hLfEoKRTjfuRTqQA-3" value="Health Checker" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="600" y="1140" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="rG46hLfEoKRTjfuRTqQA-4" value="Heart Beat&lt;div&gt;Sends Heart Beats to node cluster to check health of nodes off some arbritray hearbeat method&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="rG46hLfEoKRTjfuRTqQA-4" value="Heart Beat&lt;div&gt;Sends Heart Beats to node cluster to check health of nodes off some arbritray hearbeat method&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="870" y="1280" width="210" height="210" as="geometry"/>
                 </mxCell>
-                <mxCell id="rG46hLfEoKRTjfuRTqQA-5" value="Health Event Publisher&lt;div&gt;Publishes to Node registry subscriber events of nodes dying&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="rG46hLfEoKRTjfuRTqQA-5" value="Health Event Publisher&lt;div&gt;Publishes to Node registry subscriber events of nodes dying&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="620" y="1280" width="210" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="5cNF99poPbmCpLrNY1MU-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="1470" y="110" width="520" height="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="5cNF99poPbmCpLrNY1MU-2" value="Failover Process" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="1470" y="70" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="ciOh5jKht-e7GsHXnUFe-2" value="Failover Event Consumer&lt;div&gt;Consumes Failover event from Node registry and triggers Failover Process&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="1510" y="160" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="ciOh5jKht-e7GsHXnUFe-3" value="&amp;nbsp;Durable Queue&lt;div&gt;Ingest writes while new leader is elected will.&amp;nbsp;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="1750" y="160" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="ciOh5jKht-e7GsHXnUFe-5" value="Leader Election&lt;div&gt;Algorithm to determine which node is now leader and writes from durable queue to new leader&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="1515" y="390" width="190" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-3" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="ikNza2xgGSqLDH8rGNYe-1" target="5cNF99poPbmCpLrNY1MU-1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="1410" y="830" width="580" height="580" as="geometry"/>
+                </mxCell>
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-2" value="Multi Node Cluster" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="1410" y="788" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-8" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ikNza2xgGSqLDH8rGNYe-6" target="ikNza2xgGSqLDH8rGNYe-7">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-6" value="Leader Node&lt;div&gt;Accepts all writes&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="1450" y="1040" width="180" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-10" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ikNza2xgGSqLDH8rGNYe-7" target="ikNza2xgGSqLDH8rGNYe-9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-7" value="Async replicator&lt;div&gt;replicate new data to followers&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="1670" y="1080" width="110" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="ikNza2xgGSqLDH8rGNYe-9" value="Followers&lt;div&gt;disperese read throughput&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="1810" y="1055" width="160" height="160" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
